@@ -24,12 +24,14 @@ jobs:
           elif [[ "${{ github.event.pull_request.base.ref }}" == "master" ]]; then
             STATUS="Done"
           else
-            echo "No status update needed"
+            echo "🚫 No status update needed"
             exit 0
           fi
 
+          echo "🔄 Updating Monday.com status to '$STATUS'"
+
           curl -X POST "https://api.monday.com/v2" \
-            -H "Authorization: $eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjQ2MTQxNjg5MCwiYWFpIjoxMSwidWlkIjo2Njk1NTgyOSwiaWFkIjoiMjAyNS0wMS0yMlQxMjowNDozMy4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MjQ4NDc0MDEsInJnbiI6InVzZTEifQ.Sdn5cKSqZs3C-FA1hi9t4cK9wcTe6J4EcCyngD2gRT0" \
+            -H "Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjQ2MTQxNjg5MCwiYWFpIjoxMSwidWlkIjo2Njk1NTgyOSwiaWFkIjoiMjAyNS0wMS0yMlQxMjowNDozMy4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MjQ4NDc0MDEsInJnbiI6InVzZTEifQ.Sdn5cKSqZs3C-FA1hi9t4cK9wcTe6J4EcCyngD2gRT0" \
             -H "Content-Type: application/json" \
             -d '{
               "query": "mutation { change_simple_column_value (board_id: 7494572737, item_id: 8305056982, column_id: \"status\", value: \"'$STATUS'\") { id } }"
