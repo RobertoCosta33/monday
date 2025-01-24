@@ -20,7 +20,7 @@ jobs:
           ITEM_ID: ${{ secrets.ITEM_ID }}
         run: |
           if [[ "${{ github.event.pull_request.base.ref }}" == "develop" ]]; then
-            STATUS="Teste 2º Dev - DEV"
+            STATUS="Deploy"
           elif [[ "${{ github.event.pull_request.base.ref }}" == "test" ]]; then
             STATUS="Teste Q/A - TEST"
           elif [[ "${{ github.event.pull_request.base.ref }}" == "master" ]]; then
