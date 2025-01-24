@@ -13,16 +13,22 @@ jobs:
         if: github.event.pull_request.merged == true
         run: echo "PR merged, updating Monday.com status"
 
-      - name: Set Monday Status
+      - name: Load environment variables
+        run: |
+          echo "MONDAY_API_KEY=${MONDAY_API_KEY}" >> $GITHUB_ENV
+          echo "BOARD_ID=${BOARD_ID}" >> $GITHUB_ENV
+          echo "ITEM_ID=${ITEM_ID}" >> $GITHUB_ENV
         env:
-          MONDAY_API_KEY: ${{ secrets.MONDAY_API_KEY }}
-          BOARD_ID: ${{ secrets.BOARD_ID }}
-          ITEM_ID: ${{ secrets.ITEM_ID }}
+          MONDAY_TOKEN: $MONDAY_API_KEY
+          BOARD_ID: $BOARD_ID
+          ITEM_ID: $ITEM_ID
+
+      - name: Set Monday Status
         run: |
           if [[ "${{ github.event.pull_request.base.ref }}" == "develop" ]]; then
-            STATUS="Teste 2º Dev - DEV"
+            STATUS="Dev"
           elif [[ "${{ github.event.pull_request.base.ref }}" == "test" ]]; then
-            STATUS="Teste Q/A - TEST"
+            STATUS="Test"
           elif [[ "${{ github.event.pull_request.base.ref }}" == "master" ]]; then
             STATUS="Done"
           else
