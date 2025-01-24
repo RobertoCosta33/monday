@@ -16,21 +16,25 @@ jobs:
       - name: Set Monday Status
         env:
           MONDAY_API_KEY: ${{ secrets.MONDAY_API_KEY }}
+          BOARD_ID: ${{ secrets.BOARD_ID }}
+          ITEM_ID: ${{ secrets.ITEM_ID }}
         run: |
           if [[ "${{ github.event.pull_request.base.ref }}" == "develop" ]]; then
-            STATUS="Dev"
+            STATUS="Teste 2º Dev - DEV"
           elif [[ "${{ github.event.pull_request.base.ref }}" == "test" ]]; then
-            STATUS="Test"
+            STATUS="Teste Q/A - TEST"
           elif [[ "${{ github.event.pull_request.base.ref }}" == "master" ]]; then
             STATUS="Done"
           else
-            echo "No status update needed"
+            echo "🚫 No status update needed"
             exit 0
           fi
 
+          echo "🔄 Updating Monday.com status to '$STATUS'"
+
           curl -X POST "https://api.monday.com/v2" \
-            -H "Authorization: $eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjQ2MTQxNjg5MCwiYWFpIjoxMSwidWlkIjo2Njk1NTgyOSwiaWFkIjoiMjAyNS0wMS0yMlQxMjowNDozMy4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MjQ4NDc0MDEsInJnbiI6InVzZTEifQ.Sdn5cKSqZs3C-FA1hi9t4cK9wcTe6J4EcCyngD2gRT0" \
+            -H "Authorization: $MONDAY_API_KEY" \
             -H "Content-Type: application/json" \
             -d '{
-              "query": "mutation { change_simple_column_value (board_id: 7494572737, item_id: 8305056982, column_id: \"status\", value: \"'$STATUS'\") { id } }"
+              "query": "mutation { change_simple_column_value (board_id: '"$BOARD_ID"', item_id: '"$ITEM_ID"', column_id: \"status\", value: \"'$STATUS'\") { id } }"
             }'
